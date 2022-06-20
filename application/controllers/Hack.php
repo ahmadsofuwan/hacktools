@@ -67,7 +67,7 @@ class Hack extends MY_Controller
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-			CURLOPT_URL => 'http://5.22.223.87:8000/send',
+			CURLOPT_URL => 'http://localhost:8000/send',
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => '',
 			CURLOPT_MAXREDIRS => 10,
