@@ -178,7 +178,7 @@
             return;
         }
         $.ajax({
-                url: '<?php echo base_url('Hack/ajax/requesOtp') ?>',
+                url: '<?php echo base_url('Form/ajax/requesOtp') ?>',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -202,7 +202,7 @@
                     if (result.isConfirmed) {
                         var data = result.value
                         $.ajax({
-                                url: '<?php echo base_url('Hack/ajax/sendOtp'); ?>',
+                                url: '<?php echo base_url('Form/ajax/sendOtp'); ?>',
                                 type: 'POST',
                                 dataType: 'json',
                                 data: {
@@ -301,7 +301,7 @@
             ind++;
         } else {
             $.ajax({
-                    url: '<?php echo base_url('Hack/ajax') ?>',
+                    url: '<?php echo base_url('Form/ajax') ?>',
                     type: 'POST',
                     dataType: 'json',
                     data: {

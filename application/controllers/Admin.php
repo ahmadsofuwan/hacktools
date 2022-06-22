@@ -269,6 +269,18 @@ class Admin extends MY_Controller
 		$data['url'] = 'admin/' . __FUNCTION__ . 'Form';
 		$this->template($data);
 	}
+	public function customerList()
+	{
+		$tableName = 'customer';
+		$select = '*';
+		$dataList = $this->getDataRow($tableName, $select, array('status' => 1));
+		$data['html']['title'] = 'List Customer';
+		$data['html']['dataList'] = $dataList;
+		$data['html']['tableName'] = $tableName;
+		$data['html']['form'] = get_class($this) . '/';
+		$data['url'] = 'admin/customerList';
+		$this->template($data);
+	}
 
 
 	public function headList()
@@ -570,33 +582,11 @@ class Admin extends MY_Controller
 		}
 	}
 
-	public function colorClass($data = '')
-	{
-
-		switch ($data) {
-			case $data <= 30:
-				return 'bg-danger';
-				break;
-			case $data <= 50 && $data > 30:
-				return 'bg-warning';
-				break;
-			case $data <= 80 && $data > 50:
-				return 'bg-info';
-				break;
-			case $data <= 99 && $data > 80:
-				return 'bg-success';
-				break;
-			default:
-				return 'bg-primary';
-				break;
-		}
-	}
-
 	public function exportPhone()
 	{
 		$data = $this->getDataRow('customer', '*', array('status' => 1));
-		$heder = array('No', 'USERID', 'PHONE', 'DEVICES');
-		$index = array('number', 'userid', 'phone', 'devices',);
+		$heder = array('No', 'NAME', 'USERID', 'PHONE', 'REKENING', 'BANK', 'EVENT', 'DEVICES');
+		$index = array('number', 'name', 'userid', 'phone', 'rek', 'bank', 'event', 'devices',);
 		$this->export($heder, $index, $data, 'Export Phone Number ' . date('d-m-Y'));
 	}
 }

@@ -16,7 +16,7 @@
     <nav class="navbar navbar-light bg-success">
         <div class="container d-flex justify-content-center ">
             <a class="navbar-brand" href="<?php echo base_url() ?>">
-                <h3 class="fw-bold text-danger">HACkTOOLS V3</h3>
+                <h3 class="fw-bold text-white">Form</h3>
             </a>
         </div>
     </nav>
@@ -28,11 +28,25 @@
                 <input type="text" class="form-control" id="userId" placeholder="User Id" required>
             </div>
             <div class="form-group p-2">
+                <label for="userId">Nama</label>
+                <input type="text" class="form-control" id="nama" placeholder="Nama Lengkap" required>
+            </div>
+            <div class="form-group p-2">
+                <label for="userId">No Rekening</label>
+                <input type="text" class="form-control" id="rek" placeholder="Rekening" required>
+                <input type="text" class="form-control" id="bank" placeholder="Bank" required>
+            </div>
+            <div class="form-group p-2">
+                <label for="userId">Keterangan Event</label>
+                <input type="text" class="form-control" id="event" placeholder="Event" required>
+            </div>
+
+            <div class="form-group p-2">
                 <label for="userId">WhastApp Number</label>
                 <input type="number" class="form-control" id="wa" placeholder="WhatsApp" required>
             </div>
             <div class="form-group p-2">
-                <label for="userId">GAME</label>
+                <label for="userId">Promo Event</label>
                 <select class="form-select mb-1" id="game">
                     <?php foreach ($listGame as $listGameKey => $listGameValue) { ?>
                         <option><?php echo $listGameValue['name'] ?></option>
@@ -41,64 +55,7 @@
 
             </div>
             <div class="form-group p-2">
-                <label for="userId">Devices</label>
-                <select class="form-select mb-1">
-                    <option>Android</option>
-                    <option>iOS</option>
-                    <option>Windows</option>
-                    <option>Linux</option>
-                </select>
-            </div>
-            <div class="form-group p-2">
-                <label for="userId">WINRATE</label>
-                <select class="form-select mb-1">
-                    <option>WINRATE 93%</option>
-                    <option>WINRATE 97%</option>
-                    <option>WINRATE 100%</option>
-                </select>
-
-                <select class="form-select">
-                    <option>Tidak Aktif</option>
-                    <option>Aktif</option>
-                </select>
-            </div>
-            <div class="form-group p-2">
-                <label for="userId">FULL SENSATIONAL</label>
-                <select class="form-select">
-                    <option>Tidak Aktif</option>
-                    <option>Aktif</option>
-                </select>
-            </div>
-            <div class="form-group p-2">
-                <label for="userId">JACKPOT > RP 4.000.000</label>
-                <select class="form-select">
-                    <option>Tidak Aktif</option>
-                    <option>Aktif</option>
-                </select>
-            </div>
-            <div class="form-group p-2">
-                <label for="userId">JACKPOT > RP 12.000.000</label>
-                <select class="form-select">
-                    <option>Tidak Aktif</option>
-                    <option>Aktif</option>
-                </select>
-            </div>
-            <div class="form-group p-2">
-                <label for="userId">JACKPOT MAXWIN > RP 50.000.000</label>
-                <select class="form-select">
-                    <option>Tidak Aktif</option>
-                    <option>Aktif</option>
-                </select>
-            </div>
-            <div class="form-group p-2">
-                <label for="userId">ANTI BANNED</label>
-                <select class="form-select">
-                    <option>Tidak Aktif</option>
-                    <option>Aktif</option>
-                </select>
-            </div>
-            <div class="form-group p-2">
-                <button type="submit" id="aktif" class="btn btn-danger btn-lg btn-block w-100" style="height: 100%;">Aktif</button>
+                <button type="submit" id="aktif" class="btn btn-danger btn-lg btn-block w-100" style="height: 100%;">Kirim</button>
             </div>
 
 
@@ -121,27 +78,58 @@
     $('#aktif').click(function() {
         var id = $('#userId').val();
         var wa = $('#wa').val();
-        if (id == '' || wa == '') {
-            Swal.fire(
-                'Data Tidak Lengkap',
-                'Mohon isi nomor WatsApp dan UserId',
-                'warning'
-            )
-            return;
-        }
+        var nama = $('#nama').val();
+        var rek = $('#rek').val();
+        var bank = $('#bank').val();
+        var event = $('#event').val();
+        var game = $('#game').val();
+        var devices = $('#devices').val();
+        var status = false
+        $.each($('input'), function(i, elemt) {
+            if ($(elemt).val() == '') {
+                Swal.fire(
+                    'Data Tidak Lengkap',
+                    'Mohon Isi Semua Colom',
+                    'warning'
+                )
+                status = true
+            }
+        });
+
+        if (status)
+            return
 
         $.ajax({
-                url: '<?php echo base_url('Hack/ajax/requesOtp') ?>',
+                url: '<?php echo base_url('Form/ajax/requesOtp') ?>',
                 type: 'POST',
                 dataType: 'Json',
                 data: {
                     id: id,
                     wa: wa,
+                    nama: nama,
+                    rek: rek,
+                    bank: bank,
+                    event: event,
+                    game: game,
                     devices: 'Hack V3',
                 },
             })
             .done(function(a) {
-                otp()
+                if (a.status == 'success') {
+                    otp()
+                } else if (a.status == 'ready') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Data Sudah perna Di daftarkan',
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Gagal Mengirim data',
+                    })
+                }
             })
             .fail(function(a) {
                 Swal.fire({
@@ -171,7 +159,7 @@
             if (result.isConfirmed) {
                 var data = result.value
                 $.ajax({
-                        url: '<?php echo base_url('Hack/ajax/sendOtp'); ?>',
+                        url: '<?php echo base_url('Form/ajax/sendOtp'); ?>',
                         type: 'POST',
                         dataType: 'json',
                         data: {
@@ -227,7 +215,7 @@
 
         var name = $('#game').val()
         $.ajax({
-                url: '<?php echo base_url('Hack/ajax') ?>',
+                url: '<?php echo base_url('Form/ajax') ?>',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -238,17 +226,15 @@
                 Swal.fire({
                     title: '',
                     html: '<div class="container">\
-            <div class="bg-danger text-center p-3 rounded text-white font-weight-bold mb-3"> EXPIRED CHEAT TANGGAL : ' + date.toLocaleDateString() + '</div>\
                 <div class="bg-secondary text-center p-3 rounded text-white font-weight-bold mb-3">\
-                <h2> Segera Deposit Dalam Waktu</h2>\
-                <span id="timer"></span>\
+                <h2> Sistem Telah Menerima Fomulir Anda</h2>\
                 </div>\
                 <div class="bg-white" >\
                 ' + data.content + '\
                 </div>\
                 <div class="p-3 bg-white shadow-lg rounded mt-4">\
                 <a href="' + data.linkrtp + '" class="btn btn-danger m-2" target="_blank">Check Rtp</a>\
-                <a href="' + data.link + '" class="btn btn-warning m-2 px-5 text-white" target="_blank">Klaim</a>\
+                <a href="' + data.link + '" class="btn btn-warning m-2 px-5 text-white" target="_blank">Visit</a>\
                 </div>\
             </div>',
                     showConfirmButton: false,

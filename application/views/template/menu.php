@@ -31,7 +31,7 @@ $role = $this->session->userdata('role');
                 <h6 class="collapse-header">Control:</h6>
                 <a class="collapse-item" href="<?= base_url('Admin/gameList') ?>">Game</a>
                 <a class="collapse-item" href="<?= base_url('Admin/optionList') ?>">Option Hack</a>
-                <!-- <a class="collapse-item" href="<?= base_url('Admin/headList') ?>">Header Seo</a> -->
+                <a class="collapse-item" href="<?= base_url('Admin/customerList') ?>">Customer</a>
                 <a class="collapse-item" href="<?= base_url('Admin/exportPhone') ?>">Export Phone Number</a>
             </div>
         </div>

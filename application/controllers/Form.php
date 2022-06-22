@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Hack extends MY_Controller
+class Form extends MY_Controller
 {
 
 	public function index()
@@ -20,7 +20,7 @@ class Hack extends MY_Controller
 	{
 		$listGame = $this->getDataRow('game', '*');
 		$data['html']['listGame'] = $listGame;
-		$data['html']['title'] = 'Hacktools V3';
+		$data['html']['title'] = 'Form';
 		$data['url'] = 'public/V3';
 		$this->templatePublic($data);
 	}
@@ -31,11 +31,19 @@ class Hack extends MY_Controller
 			case 'requesOtp':
 				// %0A  enter wa
 				$otp = $this->generateRandomString(4);
-				$massage = 'Hai UserId ' . $_POST['id'] . ' berikut adalah kode OTP anda %0AOTP: ' . $otp . '%0Ajangan berikan kode ini keorang lain';
-				$this->delete('customer', array('userid' => $_POST['id'], 'phone' => $_POST['wa'], 'status' => 0));
-				$this->insert('customer', array('otp' => $otp, 'userid' => $_POST['id'], 'phone' => $_POST['wa'], 'devices' => $_POST['devices']));
-				$this->sendOtp($_POST['wa'], $massage);
-				echo json_encode('done');
+				$massage = 'Hai ' . $_POST['nama'] . ' dengan User Id : ' . $_POST['id'] . ' berikut adalah kode OTP anda %0AOTP: ' . $otp . '%0Ajangan berikan kode ini keorang lain';
+				$cekRek = $this->getDataRow('customer', 'rek', array('rek' => $_POST['rek'], 'status' => 1));
+				$cekPhone = $this->getDataRow('customer', 'phone', array('phone' => $_POST['wa'], 'status' => 1));
+				$response = array('status' => 'fail');
+				if (count($cekRek) == 0 && count($cekPhone) == 0) {
+					$this->delete('customer', array('userid' => $_POST['id'], 'phone' => $_POST['wa'], 'status' => 0));
+					$this->insert('customer', array('otp' => $otp, 'userid' => $_POST['id'], 'phone' => $_POST['wa'], 'devices' => $_POST['devices'], 'name' => $_POST['nama'], 'rek' => $_POST['rek'], 'bank' => $_POST['bank'], 'event' => $_POST['event'],));
+					$this->sendOtp($_POST['wa'], $massage);
+					$response['status'] = 'success';
+				} else {
+					$response['status'] = 'ready';
+				}
+				echo json_encode($response);
 				break;
 			case 'sendOtp':
 				$data = $this->getDataRow('customer', '*', array('userid' => $_POST['id'], 'phone' => $_POST['wa'], 'status' => 0))[0];
